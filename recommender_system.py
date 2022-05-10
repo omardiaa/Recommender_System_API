@@ -155,7 +155,7 @@ def runXGB(train_X, train_y, seed_val=0):
 	return model
 
 
-if __name__ == "__main__":
+def main():
 	start_time = datetime.datetime.now()
 	data_path = "./Data/"
 	train_file =  open(data_path + "train_ver2.csv")
@@ -185,11 +185,14 @@ if __name__ == "__main__":
 	print(datetime.datetime.now()-start_time)
 
 	print("Getting the top products..")
-	target_cols = np.array(target_cols)
+	new_target_cols = np.array(target_cols)
 	preds = np.argsort(preds, axis=1)
 	preds = np.fliplr(preds)[:,:7]
 	test_id = np.array(pd.read_csv(data_path + "test_ver2.csv", usecols=['ncodpers'])['ncodpers'])
-	final_preds = [" ".join(list(target_cols[pred])) for pred in preds]
+	final_preds = [" ".join(list(new_target_cols[pred])) for pred in preds]
 	out_df = pd.DataFrame({'ncodpers':test_id, 'added_products':final_preds})
 	out_df.to_csv('sub_xgb_new.csv', index=False)
 	print(datetime.datetime.now()-start_time)
+
+if __name__ == "__main__":
+    main()
